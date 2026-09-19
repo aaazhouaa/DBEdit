@@ -1,8 +1,8 @@
-# Edit（Android SQLite 编辑器）
+# DB 编辑器（Android SQLite 编辑器）
 
 一个原生 Android 应用：打开 `.db` 文件即可浏览数据表、搜索记录、直接修改并保存。
 
-APK：`~/workspace/Edit-debug.apk`（debug 签名，可直接安装）
+APK：`~/workspace/DBEdit-release.apk`（debug 签名，可直接安装）
 
 ## 功能
 
@@ -54,7 +54,7 @@ APK：`~/workspace/Edit-debug.apk`（debug 签名，可直接安装）
 | 令牌 | 值 | 用途 |
 | --- | --- | --- |
 | 主色 | `#2563EB` | 按钮、选中态、强调 |
-| 页面底色 | `#F8F8F8` | 页面、顶栏、侧栏 |
+| 页面底色 | `#F8F8F8` | 页面、顶栏 |
 | 卡片 | `#FFFFFF` | 分组卡片、列表项 |
 | 描边/分隔 | `#E5E5EA`（0.5dp 线） | 卡片内分隔、表格线 |
 | 弱化文字 | `#8E8E93` | 副标题、提示 |
@@ -67,25 +67,10 @@ APK：`~/workspace/Edit-debug.apk`（debug 签名，可直接安装）
 - **间距**：4 / 8 / 12 / 16 / 24 / 32 dp。
 - 图标为 Feather 风格线条图标（1.9dp 描边、圆头），取自 AiCode 所用的同一套图标风格。
 - **按钮只有两种底色**，避免主次不分：
-  - 主要操作 —— 主色填充 + 白字（`Widget.Edit.Button`）；
-  - 次要操作 —— 白底 + 1dp 描边 + 主色文字（`Widget.Edit.Button.Muted`，
+  - 主要操作 —— 主色填充 + 白字（`Widget.DbEdit.Button`）；
+  - 次要操作 —— 白底 + 1dp 描边 + 主色文字（`Widget.DbEdit.Button.Muted`，
     按下转主色容器色，禁用转弱化灰）。
   样式名 `Muted` 是历史名，语义现为「描边次按钮」。
-
-### 侧边导航
-
-左侧抽屉（宽 300dp、页面底色、朝向内容一侧 24dp 圆角），目前**只有「Edit」一项**。
-抽屉顶部只按状态栏高度留白，不写标题或分组小字——只有一项时那是重复信息。
-
-新增工具只需往 `AppNav.items` 追加一个 `NavItem`，侧栏会自动渲染条目、
-分隔线与选中态，不需要改布局：
-
-```kotlin
-val items = listOf(
-    NavItem(AppNav.TOOL_DB_EDITOR, R.string.nav_db_editor, R.drawable.ic_database),
-    NavItem("log_viewer", R.string.nav_log_viewer, R.drawable.ic_clock),   // 直接加
-)
-```
 
 ## 数据安全设计
 
@@ -107,15 +92,15 @@ val items = listOf(
 ## 构建
 
 ```bash
-cd ~/workspace/Edit
+cd ~/workspace/DBEdit
 export ANDROID_HOME=/opt/android-sdk
-./gradlew assembleDebug          # 产物：app/build/outputs/apk/debug/app-debug.apk
+./gradlew assembleRelease        # 产物：app/build/outputs/apk/release/app-release.apk
 ./gradlew testDebugUnitTest      # 单元测试
 ```
 
 ## 测试
 
-**160 个测试全部通过**，`clean` 构建通过。
+**142 个测试全部通过**，`clean` 构建通过。
 
 | 测试类 | 数量 | 验证内容 |
 | --- | --- | --- |
@@ -124,8 +109,7 @@ export ANDROID_HOME=/opt/android-sdk
 | `SchemaDiffTest` | 18 | 变更预览的诊断准确性 |
 | `SchemaFormLogicTest` | 25 | 列编辑表单：主键编号、自增校正、NOT NULL 校验 |
 | `InsetMathTest` | 8 | 系统栏 inset 计算 |
-| `LayoutAndInsetsTest` | 26 | **真实加载每个布局/菜单 + 真实 Activity 跑 inset + 侧边栏** |
-| `DrawerShapeTest` | 7 | 侧栏圆角/宽度/状态栏留白/无冗余标题 |
+| `LayoutAndInsetsTest` | 15 | **真实加载每个布局/菜单 + 真实 Activity 跑 inset** |
 | `ToolbarAndButtonStyleTest` | 4 | 顶栏右侧留白、按钮描边与禁用态配色 |
 
 后两类用 **Robolectric** 在 JVM 上跑真实 Android 框架，所以「顶栏不被状态栏盖住」

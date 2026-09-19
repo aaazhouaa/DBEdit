@@ -5,7 +5,7 @@
       主题对齐 AiCode：浅灰页面底 + 白色圆角卡片 + 扁平顶栏（页面底色 + 深色文字）。
       注意顶栏不再是彩色条，所以状态栏图标要用深色（见 EdgeToEdge.kt）。
     -->
-    <style name="Theme.Edit" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.DbEdit" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/page_background</item>
         <item name="colorAccent">@color/primary</item>
@@ -24,37 +24,37 @@
     </style>
 
     <!-- 顶栏：扁平，用页面底色，文字/图标为深色（与 AiCode TopAppBar 一致） -->
-    <style name="ThemeOverlay.Edit.Toolbar" parent="ThemeOverlay.AppCompat.Light">
+    <style name="ThemeOverlay.DbEdit.Toolbar" parent="ThemeOverlay.AppCompat.Light">
         <item name="colorControlNormal">@color/on_background</item>
         <item name="android:textColorPrimary">@color/on_background</item>
         <item name="android:textColorSecondary">@color/on_surface_variant</item>
     </style>
 
-    <style name="Widget.Edit.Toolbar" parent="Widget.AppCompat.Toolbar">
+    <style name="Widget.DbEdit.Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="android:background">@color/page_background</item>
-        <item name="titleTextAppearance">@style/TextAppearance.Edit.ToolbarTitle</item>
+        <item name="titleTextAppearance">@style/TextAppearance.DbEdit.ToolbarTitle</item>
         <item name="android:elevation">0dp</item>
     </style>
 
-    <style name="TextAppearance.Edit.ToolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <style name="TextAppearance.DbEdit.ToolbarTitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">17sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/on_background</item>
     </style>
 
     <!-- 分组小标题：卡片上方的灰色小字（AiCode SettingsGroupHeader） -->
-    <style name="TextAppearance.Edit.GroupHeader" parent="android:TextAppearance.Material">
+    <style name="TextAppearance.DbEdit.GroupHeader" parent="android:TextAppearance.Material">
         <item name="android:textSize">13sp</item>
         <item name="android:textColor">@color/on_surface_variant</item>
     </style>
 
     <!-- 卡片：白色圆角 14dp，无阴影无描边（AiCode SettingsGroup）。未直接被引用，仅供后续布局使用 -->
-    <style name="Widget.Edit.Card" parent="android:Widget">
+    <style name="Widget.DbEdit.Card" parent="android:Widget">
         <item name="android:background">@drawable/bg_card</item>
     </style>
 
-    <!-- 主按钮：填充主色、圆角 10dp（显式 parent，否则隐式继承不存在的 Widget.Edit） -->
-    <style name="Widget.Edit.Button" parent="Widget.AppCompat.Button">
+    <!-- 主按钮：填充主色、圆角 10dp（显式 parent，否则隐式继承不存在的 Widget.DbEdit） -->
+    <style name="Widget.DbEdit.Button" parent="Widget.AppCompat.Button">
         <item name="android:background">@drawable/bg_button_primary</item>
         <item name="android:textColor">@color/on_primary</item>
         <item name="android:textSize">15sp</item>
@@ -72,13 +72,13 @@
       不再混用多种浅灰（原先输入框 #F2F2F7 与次按钮 #F0F2F5 是两套不统一的灰）。
       样式名保留 Muted 以免大范围改布局引用。
     -->
-    <style name="Widget.Edit.Button.Muted" parent="Widget.Edit.Button">
+    <style name="Widget.DbEdit.Button.Muted" parent="Widget.DbEdit.Button">
         <item name="android:background">@drawable/bg_button_outlined</item>
         <item name="android:textColor">@color/button_outlined_text</item>
     </style>
 
     <!-- 输入框：浅灰胶囊底、无边框（AiCode 搜索框风格） -->
-    <style name="Widget.Edit.EditText" parent="Widget.AppCompat.EditText">
+    <style name="Widget.DbEdit.EditText" parent="Widget.AppCompat.EditText">
         <item name="android:background">@drawable/bg_input</item>
         <item name="android:textColor">@color/on_background</item>
         <item name="android:textColorHint">@color/subtle_text</item>
@@ -88,8 +88,8 @@
         <item name="android:paddingEnd">14dp</item>
     </style>
 
-    <!-- 分组内的行分隔线：0.5dp 浅色。用 android: 父样式，避免隐式依赖 Widget.Edit -->
-    <style name="Widget.Edit.Divider" parent="android:Widget">
+    <!-- 分组内的行分隔线：0.5dp 浅色。用 android: 父样式，避免隐式依赖 Widget.DbEdit -->
+    <style name="Widget.DbEdit.Divider" parent="android:Widget">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">0.5dp</item>
         <item name="android:background">@color/subtle_border</item>

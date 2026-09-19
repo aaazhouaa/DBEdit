@@ -1,4 +1,4 @@
-package com.example.edit
+package com.example.dbedit
 
 import android.os.Bundle
 import android.text.Editable
@@ -19,7 +19,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.edit.databinding.ActivityTableDataBinding
+import com.example.dbedit.databinding.ActivityTableDataBinding
 
 class TableDataActivity : BaseActivity() {
 

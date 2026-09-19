@@ -1,34 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  主界面：左侧抽屉导航 + 右侧内容。
+  主界面：顶部顶栏 + 下方内容。
   视觉对齐 AiCode：浅灰页面底（#F8F8F8）、白色圆角卡片分组、扁平顶栏。
 -->
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/drawerLayout"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/page_background"
-    android:fitsSystemWindows="false">
+    android:fitsSystemWindows="false"
+    android:orientation="vertical">
 
-    <!-- 内容区 -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/page_background"
-        android:orientation="vertical">
-
-        <androidx.appcompat.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/toolbar"
-            style="@style/Widget.Edit.Toolbar"
+            style="@style/Widget.DbEdit.Toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:theme="@style/ThemeOverlay.Edit.Toolbar"
+            android:theme="@style/ThemeOverlay.DbEdit.Toolbar"
             app:title="@string/app_name" />
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
             android:clipToPadding="false"
             android:fillViewport="true"
             android:paddingBottom="16dp">
@@ -67,13 +62,13 @@
 
                     <include layout="@layout/item_action_row" android:id="@+id/rowPick" />
 
-                    <View style="@style/Widget.Edit.Divider"
+                    <View style="@style/Widget.DbEdit.Divider"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp" />
 
                     <include layout="@layout/item_action_row" android:id="@+id/rowDemo" />
 
-                    <View style="@style/Widget.Edit.Divider"
+                    <View style="@style/Widget.DbEdit.Divider"
                         android:layout_marginStart="16dp"
                         android:layout_marginEnd="16dp" />
 
@@ -131,15 +126,4 @@
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>
-    </LinearLayout>
-
-    <!--
-      侧边导航。注意：<include> 上的 layout_* 属性必须三项都写（宽/高/gravity），
-      否则 Android 会丢弃这些参数——只写 layout_gravity 会导致侧栏占满整屏。
-    -->
-    <include
-        layout="@layout/nav_drawer"
-        android:layout_width="300dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start" />
-</androidx.drawerlayout.widget.DrawerLayout>
+</LinearLayout>

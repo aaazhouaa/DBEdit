@@ -1,4 +1,4 @@
-package com.example.edit
+package com.example.dbedit
 
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +51,7 @@ class LayoutAndInsetsTest {
      */
     private fun themedInflater(): android.view.LayoutInflater {
         val base = ApplicationProvider.getApplicationContext<android.content.Context>()
-        val themed = android.view.ContextThemeWrapper(base, R.style.Theme_Edit)
+        val themed = android.view.ContextThemeWrapper(base, R.style.Theme_DbEdit)
         return android.view.LayoutInflater.from(themed)
     }
 
@@ -93,9 +93,7 @@ class LayoutAndInsetsTest {
             R.layout.activity_schema_preview,
             R.layout.item_table,
             R.layout.item_hit,
-            R.layout.item_action_row,
-            R.layout.item_nav,
-            R.layout.nav_drawer
+            R.layout.item_action_row
         )
         ids.forEach { id ->
             val v = inflater.inflate(id, null)
@@ -250,183 +248,8 @@ class LayoutAndInsetsTest {
         // 未打开数据库时应提示并结束，而不是崩溃
         val controller = Robolectric.buildActivity(MainActivity::class.java)
         val activity = controller.setup().get()
-        assertNotNull("主页应有侧边栏", activity.findViewById<View>(R.id.drawerLayout))
-        assertNotNull("主页应有工具卡片容器", activity.findViewById<View>(R.id.navContainer))
-    }
-
-    // ---------------- 侧边栏（只有一项，且可扩展） ----------------
-
-    @Test
-    fun sidebarShowsOnlyEditForNow() {
-        assertEquals(
-            "当前侧边栏应只有 Edit一项",
-            listOf(AppNav.TOOL_DB_EDITOR),
-            AppNav.items.map { it.id }
-        )
-    }
-
-    @Test
-    fun sidebarRowIsRenderedWithTitleAndIcon() {
-        val activity = Robolectric.buildActivity(MainActivity::class.java).setup().get()
-        val container = activity.findViewById<android.widget.LinearLayout>(R.id.navContainer)
-        assertEquals("应渲染出 1 个工具条目", 1, container.childCount)
-
-        val row = container.getChildAt(0)
-        val title = row.findViewById<android.widget.TextView>(R.id.tvNavTitle)
-        assertEquals(
-            activity.getString(R.string.nav_db_editor),
-            title.text.toString()
-        )
-    }
-
-    @Test
-    fun sidebarMarksCurrentToolAsSelected() {
-        // 选中项用主色文字，与未选中区分
-        val activity = Robolectric.buildActivity(MainActivity::class.java).setup().get()
-        val container = activity.findViewById<android.widget.LinearLayout>(R.id.navContainer)
-        val title = container.getChildAt(0).findViewById<android.widget.TextView>(R.id.tvNavTitle)
-        assertEquals(
-            activity.getColorCompat(R.color.primary),
-            title.currentTextColor
-        )
-    }
-
-    @Test
-    fun sidebarCanBeExtendedWithMoreItems() {
-        // 关键需求：后续往下加新工具时，容器应自动多渲染一行 + 一条分隔线
-        val activity = Robolectric.buildActivity(MainActivity::class.java).setup().get()
-        val container = activity.findViewById<android.widget.LinearLayout>(R.id.navContainer)
-
-        val extra = AppNav.items + NavItem(
-            id = "future_tool",
-            titleRes = R.string.nav_db_editor,
-            iconRes = R.drawable.ic_clock
-        )
-        AppNav.render(container, AppNav.TOOL_DB_EDITOR, extra) { }
-
-        // 2 行 + 1 条分隔线
-        assertEquals(3, container.childCount)
-        val second = container.getChildAt(2)
-        val secondTitle = second.findViewById<android.widget.TextView>(R.id.tvNavTitle)
-        assertNotNull("新增的工具条目也要能取到标题", secondTitle)
-    }
-
-    @Test
-    fun sidebarUnavailableToolIsDisabled() {
-        val activity = Robolectric.buildActivity(MainActivity::class.java).setup().get()
-        val container = activity.findViewById<android.widget.LinearLayout>(R.id.navContainer)
-
-        val disabled = listOf(
-            NavItem("soon", R.string.nav_db_editor, R.drawable.ic_clock, available = false)
-        )
-        AppNav.render(container, AppNav.TOOL_DB_EDITOR, disabled) { }
-
-        val row = container.getChildAt(0)
-        assertTrue("未实现的工具不可点", !row.isEnabled)
-    }
-
-    @Test
-    fun sidebarSelectedRowUsesNoDividerWhenSingleItem() {
-        // 只有一项时不应出现多余分隔线
-        val activity = Robolectric.buildActivity(MainActivity::class.java).setup().get()
-        val container = activity.findViewById<android.widget.LinearLayout>(R.id.navContainer)
-        AppNav.render(container, AppNav.TOOL_DB_EDITOR, AppNav.items) { }
-        assertEquals(1, container.childCount)
-    }
-
-    @Test
-    fun drawerOpensFromToolbarButton() {
-        val activity = Robolectric.buildActivity(MainActivity::class.java).setup().get()
-        val drawer = activity.findViewById<androidx.drawerlayout.widget.DrawerLayout>(R.id.drawerLayout)
-        val toolbar = activity.findViewById<androidx.appcompat.widget.Toolbar>(R.id.toolbar)
-        assertNotNull(toolbar.navigationIcon)
-        assertTrue("抽屉初始应是关闭的", !drawer.isDrawerOpen(androidx.core.view.GravityCompat.START))
-    }
-
-    // ---------------- 侧栏：不被状态栏盖住 + 大圆角 ----------------
-
-    @Test
-    fun drawerPanelHasRoundedCorners() {
-        // 侧栏底板带圆角（右侧两角大圆角，左侧与屏幕边缘齐平不圆）
-        val activity = Robolectric.buildActivity(MainActivity::class.java).setup().get()
-        val panel = activity.findViewById<View>(R.id.navPanel)
-        assertNotNull("侧栏面板应存在", panel)
-        assertNotNull("侧栏面板应有圆角底图", panel.background)
-    }
-
-    @Test
-    fun drawerTopSpacerExistsForStatusBarInset() {
-        // DrawerLayout 会吞掉 inset，所以侧栏顶部靠一个占位 View 留白
-        val activity = Robolectric.buildActivity(MainActivity::class.java).setup().get()
-        assertNotNull(
-            "侧栏顶部应有占位 View（否则标题会被状态栏盖住）",
-            activity.findViewById<View>(R.id.navTopSpacer)
-        )
-    }
-
-    @Test
-    fun drawerTopSpacerGetsStatusBarHeight() {
-        val activity = Robolectric.buildActivity(MainActivity::class.java).setup().get()
-        val root = activity.findViewById<ViewGroup>(android.R.id.content).getChildAt(0)
-        val spacer = activity.findViewById<View>(R.id.navTopSpacer)
-
-        // 先派发 inset，让 EdgeToEdge 记下状态栏高度
-        ViewCompat.dispatchApplyWindowInsets(root, insets(statusBar, navBar))
-        assertEquals("EdgeToEdge 应记下状态栏高度", statusBar, EdgeToEdge.lastSystemBarTop)
-
-        // 派发 inset 即触发侧栏留白（由 EdgeToEdge 回调转发，不手动调内部方法）
-        // 侧栏顶部要和主页内容对齐，所以留白是「状态栏 + 顶栏基础高（actionBarSize）」，
-        // 而不是只有状态栏高度——后者会让卡片比主页内容高出整整一个顶栏。
-        val actionBarSize = activity.resources.displayMetrics.let { dm ->
-            val tv = android.util.TypedValue()
-            activity.theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)
-            android.util.TypedValue.complexToDimensionPixelSize(tv.data, dm)
-        }
-        assertEquals(
-            "侧栏顶部占位应等于「状态栏 + 顶栏基础高」，才能和主页内容对齐",
-            statusBar + actionBarSize,
-            spacer.layoutParams.height
-        )
-    }
-
-    @Test
-    fun drawerTopGapMatchesHomeContentStart() {
-        // 用真实测量验证「侧栏第一张卡片」与「主页内容区」从同一个 y 开始
-        val activity = Robolectric.buildActivity(MainActivity::class.java).setup().get()
-        val root = activity.findViewById<ViewGroup>(android.R.id.content).getChildAt(0)
-        ViewCompat.dispatchApplyWindowInsets(root, insets(statusBar, navBar))
-
-        val dm = activity.resources.displayMetrics
-        root.measure(
-            View.MeasureSpec.makeMeasureSpec(dm.widthPixels, View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.makeMeasureSpec(dm.heightPixels, View.MeasureSpec.EXACTLY)
-        )
-        root.layout(0, 0, dm.widthPixels, dm.heightPixels)
-
-        val toolbar = activity.findViewById<View>(R.id.toolbar)
-        val panel = activity.findViewById<View>(R.id.navPanel)
-        panel.visibility = View.VISIBLE
-        panel.measure(
-            View.MeasureSpec.makeMeasureSpec((300 * dm.density).toInt(), View.MeasureSpec.EXACTLY),
-            View.MeasureSpec.makeMeasureSpec(dm.heightPixels, View.MeasureSpec.EXACTLY)
-        )
-        panel.layout(0, 0, (300 * dm.density).toInt(), dm.heightPixels)
-        val container = activity.findViewById<View>(R.id.navContainer)
-
-        assertEquals(
-            "侧栏卡片应与主页内容区从同一高度开始（顶栏底部）",
-            toolbar.bottom,
-            container.top
-        )
-    }
-
-    @Test
-    fun edgeToEdgeCachesStatusBarTopForDrawer() {
-        val activity = Robolectric.buildActivity(MainActivity::class.java).setup().get()
-        val root = activity.findViewById<ViewGroup>(android.R.id.content).getChildAt(0)
-        EdgeToEdge.lastSystemBarTop = 0
-        ViewCompat.dispatchApplyWindowInsets(root, insets(66, 100))
-        assertEquals(66, EdgeToEdge.lastSystemBarTop)
+        assertNotNull("主页应有顶栏", activity.findViewById<View>(R.id.toolbar))
+        assertNotNull("主页应有内容根布局", activity.findViewById<View>(R.id.mainRoot))
     }
 
     // ---------------- 顶栏不堆冗余图标 ----------------
@@ -466,3 +289,12 @@ class LayoutAndInsetsTest {
         )
     }
 }
+
+/**
+ * 读色值的测试辅助。
+ *
+ * 原先定义在生产代码 AppNav.kt 末尾（当时侧栏渲染要用），删侧栏时随之移除；
+ * 现在只有本测试文件在用，就放到这里，避免生产代码里留一个无人调用的扩展函数。
+ */
+internal fun android.content.Context.getColorCompat(id: Int): Int =
+    androidx.core.content.ContextCompat.getColor(this, id)

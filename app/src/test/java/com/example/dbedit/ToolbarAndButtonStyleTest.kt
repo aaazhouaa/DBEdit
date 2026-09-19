@@ -1,4 +1,4 @@
-package com.example.edit
+package com.example.dbedit
 
 import android.view.View
 import android.view.ViewGroup

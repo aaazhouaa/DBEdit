@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Edit</string>
+    <string name="app_name">DB 编辑器</string>
     <string name="title_tables">数据表</string>
     <string name="title_data">表数据</string>
     <string name="title_search">全库搜索</string>
-
-    <!-- 侧边栏 -->
-    <string name="nav_db_editor">Edit</string>
-    <string name="nav_open_drawer">打开侧边栏</string>
-    <string name="nav_tool_switched">已切换到 %1$s</string>
 
     <!-- 主界面 -->
     <string name="main_intro">打开 .db 文件即可浏览数据表、搜索记录、直接修改并保存。</string>

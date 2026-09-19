@@ -1,4 +1,4 @@
-package com.example.edit
+package com.example.dbedit
 
 /**
  * 系统栏 inset 的计算规则（纯逻辑，便于单测）。

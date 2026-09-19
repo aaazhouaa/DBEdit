@@ -1,4 +1,4 @@
-package com.example.edit
+package com.example.dbedit
 
 /**
  * 纯逻辑的 SQL 片段构造，便于单元测试。

@@ -1,4 +1,4 @@
-package com.example.edit
+package com.example.dbedit
 
 import android.app.Activity
 import android.os.Bundle
@@ -16,7 +16,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
-import com.example.edit.SqlUtil.DdlColumn
+import com.example.dbedit.SqlUtil.DdlColumn
 
 /**
  * 列定义编辑界面，同时用于「修改表结构」和「新建表」。

@@ -1,4 +1,4 @@
-package com.example.edit
+package com.example.dbedit
 
 import android.content.Intent
 import android.os.Bundle
@@ -14,8 +14,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.edit.databinding.ActivityTableListBinding
-import com.example.edit.databinding.ItemTableBinding
+import com.example.dbedit.databinding.ActivityTableListBinding
+import com.example.dbedit.databinding.ItemTableBinding
 
 class TableListActivity : BaseActivity() {
 

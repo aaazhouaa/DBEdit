@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.edit"
+    namespace = "com.example.dbedit"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.edit"
+        applicationId = "com.example.dbedit"
         minSdk = 26
         targetSdk = 35
         versionCode = 1
@@ -19,6 +19,9 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            // release 复用 debug 签名，产出可直接 adb install 的包。
+            // 有正式 keystore 时优先用正式（v2/v3），没有也不会产出 unsigned。
+            signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
         }
     }
 
@@ -46,7 +49,6 @@ dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("androidx.recyclerview:recyclerview:1.3.2")
-    implementation("androidx.drawerlayout:drawerlayout:1.2.0")
 
     testImplementation("junit:junit:4.13.2")
     // Robolectric：在 JVM 上跑真实 Android 框架。

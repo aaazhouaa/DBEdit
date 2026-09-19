@@ -1,7 +1,7 @@
-package com.example.edit
+package com.example.dbedit
 
-import com.example.edit.SqlUtil.DdlColumn
-import com.example.edit.SqlUtil.SchemaObject
+import com.example.dbedit.SqlUtil.DdlColumn
+import com.example.dbedit.SqlUtil.SchemaObject
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse

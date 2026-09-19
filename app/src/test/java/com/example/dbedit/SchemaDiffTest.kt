@@ -1,6 +1,6 @@
-package com.example.edit
+package com.example.dbedit
 
-import com.example.edit.SqlUtil.DdlColumn
+import com.example.dbedit.SqlUtil.DdlColumn
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

@@ -1,7 +1,7 @@
-package com.example.edit
+package com.example.dbedit
 
-import com.example.edit.SchemaFormLogic.Result
-import com.example.edit.SchemaFormLogic.RowInput
+import com.example.dbedit.SchemaFormLogic.Result
+import com.example.dbedit.SchemaFormLogic.RowInput
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue

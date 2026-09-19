@@ -1,4 +1,4 @@
-package com.example.edit
+package com.example.dbedit
 
 import android.app.Activity
 import android.os.Build
@@ -15,20 +15,6 @@ import androidx.core.view.WindowInsetsCompat
  * 不处理 inset 的话顶栏会被状态栏盖住、底部按钮会被导航栏压住。
  */
 object EdgeToEdge {
-
-    /** 最近一次算出的系统栏高度。
-     *  DrawerLayout 会自己消费 inset（见 [applyInsetsTo] 返回 CONSUMED），
-     *  它的子视图（如侧边抽屉）拿不到 inset，所以在这里把值缓存下来供它们读取。 */
-    var lastSystemBarTop: Int = 0
-
-    /**
-     * 系统栏顶部高度变化时的回调。
-     *
-     * 侧栏（DrawerLayout 的子视图）拿不到 inset，所以由这里在每次 inset 分发时转发给它。
-     * 用回调而不是「读一次缓存」：后者要求读取时机恰好晚于第一次 inset 分发，
-     * 而 onPostCreate 里注册监听后立刻读取，值必然还是 0（真机表现就是侧栏顶部不留白）。
-     */
-    var onSystemBarTopChanged: ((Int) -> Unit)? = null
 
     /**
      * 让窗口进入 edge-to-edge。**必须在 super.onCreate 之前调用**：
@@ -92,11 +78,6 @@ object EdgeToEdge {
         ViewCompat.setOnApplyWindowInsetsListener(root) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
-            lastSystemBarTop = bars.top
-            // 通知侧栏：DrawerLayout 会把 inset 消费掉，侧栏自己收不到，
-            // 只能在这里转发。每到一次 inset 都要回调（旋转、横竖屏切换时值会变），
-            // 不能在侧栏那边用「一次就锁死」的标记。
-            onSystemBarTopChanged?.invoke(bars.top)
             val hasToolbar = toolbar != null && baseToolbarHeight > 0
 
             val plan = InsetMath.plan(bars.top, bars.bottom, ime.bottom, hasToolbar)
@@ -122,12 +103,6 @@ object EdgeToEdge {
             WindowInsetsCompat.CONSUMED
         }
         ViewCompat.requestApplyInsets(root)
-
-        // 根布局监听可能已经同步派发过；把当前已量到的值也补记一次，
-        // 避免 onPostCreate 时读到 0 而侧栏不留白。
-        ViewCompat.getRootWindowInsets(root)?.let {
-            lastSystemBarTop = it.getInsets(WindowInsetsCompat.Type.systemBars()).top
-        }
     }
 
     /** 从 content 容器取根视图后应用 inset（供 setContentView(int) 使用） */

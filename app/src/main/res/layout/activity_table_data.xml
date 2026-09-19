@@ -7,10 +7,10 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        style="@style/Widget.Edit.Toolbar"
+        style="@style/Widget.DbEdit.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.Edit.Toolbar" />
+        android:theme="@style/ThemeOverlay.DbEdit.Toolbar" />
 
     <!-- 搜索行：胶囊输入框 + 主色按钮 -->
     <LinearLayout
@@ -25,7 +25,7 @@
 
         <EditText
             android:id="@+id/etSearch"
-            style="@style/Widget.Edit.EditText"
+            style="@style/Widget.DbEdit.EditText"
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_weight="1"
@@ -36,7 +36,7 @@
 
         <Button
             android:id="@+id/btnSearch"
-            style="@style/Widget.Edit.Button"
+            style="@style/Widget.DbEdit.Button"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:layout_marginStart="8dp"
@@ -47,7 +47,7 @@
 
         <Button
             android:id="@+id/btnClear"
-            style="@style/Widget.Edit.Button.Muted"
+            style="@style/Widget.DbEdit.Button.Muted"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:layout_marginStart="8dp"
@@ -134,7 +134,7 @@
 
         <Button
             android:id="@+id/btnPrev"
-            style="@style/Widget.Edit.Button.Muted"
+            style="@style/Widget.DbEdit.Button.Muted"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:minWidth="0dp"
@@ -144,7 +144,7 @@
 
         <Button
             android:id="@+id/btnNext"
-            style="@style/Widget.Edit.Button.Muted"
+            style="@style/Widget.DbEdit.Button.Muted"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:layout_marginStart="8dp"
@@ -165,7 +165,7 @@
 
         <Button
             android:id="@+id/btnAddRow"
-            style="@style/Widget.Edit.Button"
+            style="@style/Widget.DbEdit.Button"
             android:layout_width="wrap_content"
             android:layout_height="44dp"
             android:minWidth="0dp"
