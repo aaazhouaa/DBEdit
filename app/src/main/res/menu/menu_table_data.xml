@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  表数据页：搜索框和「＋行」按钮在界面上已经有了，所以不再占用顶栏图标位。
+  顶栏只留 ⋮，其下是那些无处安放的次要操作。
+-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_schema"
+        android:title="@string/action_schema"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_refresh"
+        android:title="@string/action_refresh"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_clear_table"
+        android:title="@string/action_clear_table"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_drop_table"
+        android:title="@string/action_drop_table"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_export_csv"
+        android:title="@string/action_export_csv"
+        app:showAsAction="never" />
+</menu>

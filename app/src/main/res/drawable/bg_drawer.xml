@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  侧边栏底板：页面底色 + 右侧两角大圆角（与画面边缘齐平的两角不圆，
+  圆角只出现在朝向内容的一侧，这样抽屉看起来像一块圆角面板）。
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/page_background" />
+    <corners
+        android:topLeftRadius="0dp"
+        android:bottomLeftRadius="0dp"
+        android:topRightRadius="24dp"
+        android:bottomRightRadius="24dp" />
+</shape>

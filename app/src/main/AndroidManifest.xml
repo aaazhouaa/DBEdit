@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.DbEditor">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".TableListActivity"
+            android:exported="false"
+            android:label="@string/title_tables" />
+
+        <activity
+            android:name=".TableDataActivity"
+            android:exported="false"
+            android:label="@string/title_data"
+            android:windowSoftInputMode="adjustResize"
+            android:configChanges="orientation|screenSize|keyboardHidden" />
+
+        <activity
+            android:name=".SearchActivity"
+            android:exported="false"
+            android:label="@string/title_search"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".ColumnsEditorActivity"
+            android:exported="false"
+            android:label="列定义"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".SchemaPreviewActivity"
+            android:exported="false"
+            android:label="确认变更" />
+    </application>
+
+</manifest>

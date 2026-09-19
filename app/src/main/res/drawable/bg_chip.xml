@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 小标签：圆角 8dp 的浅色胶囊（列类型、行数等） -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/muted_surface" />
+    <corners android:radius="8dp" />
+</shape>

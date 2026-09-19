@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Feather "folder" -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="24" android:viewportHeight="24">
+    <path android:strokeColor="#FF64748B" android:strokeWidth="1.9"
+        android:strokeLineCap="round" android:strokeLineJoin="round"
+        android:fillColor="@android:color/transparent"
+        android:pathData="M21,18.9V8.1a1.8,1.8 0 0 0 -1.8,-1.8h-6.3l-1.8,-1.8H4.8A1.8,1.8 0 0 0 3,6.3v12.6a1.8,1.8 0 0 0 1.8,1.8h14.4A1.8,1.8 0 0 0 21,18.9z" />
+</vector>

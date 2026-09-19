@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DB 编辑器</string>
+    <string name="title_tables">数据表</string>
+    <string name="title_data">表数据</string>
+    <string name="title_search">全库搜索</string>
+
+    <!-- 侧边栏 -->
+    <string name="nav_db_editor">DB 编辑器</string>
+    <string name="nav_open_drawer">打开侧边栏</string>
+    <string name="nav_tool_switched">已切换到 %1$s</string>
+
+    <!-- 主界面 -->
+    <string name="main_intro">打开 .db 文件即可浏览数据表、搜索记录、直接修改并保存。</string>
+    <string name="main_group_open">打开数据源</string>
+    <string name="main_group_recent">最近</string>
+    <string name="main_row_pick">选择 .db 文件</string>
+    <string name="main_row_pick_sub">从文件管理器中选择一个 SQLite 数据库</string>
+    <string name="main_row_demo">打开演示数据库</string>
+    <string name="main_row_demo_sub">内置示例数据，可直接试用</string>
+    <string name="main_row_create">新建空数据库</string>
+    <string name="main_row_create_sub">创建后可用「执行 SQL」建表</string>
+    <string name="main_tip">编辑的是数据库副本，改完后点「保存」写回原文件；也可以「另存为」导出新文件。</string>
+
+    <!-- 表列表 -->
+    <string name="tables_filter_hint">过滤表名…</string>
+    <string name="action_new_table">新建表</string>
+    <string name="action_refresh">刷新</string>
+    <string name="action_more">更多</string>
+    <string name="action_save">保存</string>
+    <string name="action_save_as">另存为</string>
+    <string name="action_discard">丢弃未保存的改动</string>
+    <string name="action_vacuum">压缩数据库（VACUUM）</string>
+    <string name="action_schema">编辑表结构（加/删/改列）</string>
+    <string name="action_clear_table">清空本表数据</string>
+    <string name="action_drop_table">删除本表</string>
+    <string name="action_export_csv">导出为 CSV</string>
+    <string name="action_add_row">新增行</string>
+    <string name="tables_empty">这个数据库里还没有表</string>
+    <string name="action_search_all">全库搜索</string>
+    <string name="action_run_sql">执行 SQL</string>
+    <string name="action_db_info">库信息</string>
+    <string name="row_count_format">%1$d 行</string>
+    <string name="view_readonly">只读视图</string>
+    <string name="row_count_unknown">无法统计行数</string>
+
+    <!-- 表数据 -->
+    <string name="data_search_hint">在当前表中搜索…</string>
+    <string name="data_search">搜索</string>
+    <string name="data_clear">清除</string>
+    <string name="action_prev_page">上一页</string>
+    <string name="action_next_page">下一页</string>
+    <string name="data_empty">这张表没有数据</string>
+    <string name="data_add_row_short">＋ 行</string>
+
+    <!-- 全库搜索 -->
+    <string name="search_hint">在所有表中搜索内容…</string>
+    <string name="search_go">搜索</string>
+
+    <!-- 编辑器 -->
+    <string name="editor_add_column">＋ 添加列</string>
+    <string name="editor_apply">下一步</string>
+    <string name="preview_confirm">确认执行</string>
+    <string name="preview_back">返回修改</string>
+</resources>

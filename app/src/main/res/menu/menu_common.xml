@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  保存/另存为等不占顶栏图标位：功能仍在（溢出菜单里），但顶栏保持干净。
+  顶栏只保留 ⋮ 一个入口。
+-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_save"
+        android:title="@string/action_save"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_save_as"
+        android:title="@string/action_save_as"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_discard"
+        android:title="@string/action_discard"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_vacuum"
+        android:title="@string/action_vacuum"
+        app:showAsAction="never" />
+</menu>

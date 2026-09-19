@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  设计令牌对齐 AiCode（github.com/jieapi/AiCode）的「默认蓝」主题。
+  取值来自 app/src/main/java/com/aicode/core/theme/AIEditorTheme.kt 的
+  LightColorScheme / LightSemanticColors，未自行改动色值。
+-->
+<resources>
+    <!-- 品牌色 -->
+    <color name="icon_gray">#FF64748B</color>
+
+    <!-- 主色 -->
+    <color name="primary">#FF2563EB</color>
+    <color name="primary_pressed">#FF1D4ED8</color>
+    <color name="primary_disabled">#FFB9C6F5</color>
+    <color name="on_primary">#FFFFFFFF</color>
+    <color name="primary_container">#FFDBEAFE</color>
+    <color name="on_primary_container">#FF0B3B76</color>
+
+    <!-- 表面与文字 -->
+    <color name="on_background">#FF0F172A</color>
+    <color name="surface_variant">#FFEAF4FF</color>
+    <color name="on_surface_variant">#FF475569</color>
+    <color name="outline">#FFD1D1D6</color>
+
+    <!-- 语义色 -->
+
+    <!-- 页面与卡片 -->
+    <color name="page_background">#FFF8F8F8</color>
+    <color name="card_surface">#FFFFFFFF</color>
+    <color name="muted_surface">#FFF2F2F7</color>
+    <color name="subtle_text">#FF8E8E93</color>
+    <color name="subtle_border">#FFE5E5EA</color>
+    <color name="pressed_overlay">#0F000000</color>
+
+    <!-- 表格与数据区 -->
+    <color name="grid_line">#FFE5E5EA</color>
+    <color name="header_bg">#FFEAF4FF</color>
+</resources>
