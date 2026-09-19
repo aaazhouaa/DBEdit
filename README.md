@@ -1,12 +1,11 @@
-# DB 编辑器（Android SQLite 编辑器）
+# DB 编辑器
 
 一个原生 Android 应用：打开 `.db` 文件即可浏览数据表、搜索记录、直接修改并保存。
-
-APK：`~/workspace/DBEdit-release.apk`（debug 签名，可直接安装）
 
 ## 功能
 
 ### 浏览与编辑数据
+
 | 功能 | 说明 |
 | --- | --- |
 | 选文件打开 | 系统文件选择器选 `.db`，校验 SQLite 文件头 |
@@ -21,10 +20,10 @@ APK：`~/workspace/DBEdit-release.apk`（debug 签名，可直接安装）
 | 导出 CSV | 整表导出（带 UTF-8 BOM，Excel 中文不乱码） |
 | 最近打开 | 记录最近 8 个文件，持久化读授权 |
 
-### 结构编辑（表列表页长按，或数据页右上角菜单）
+### 结构编辑
 
-入口后半段会先过一道**变更预览页**：列出新增/删除/改名/改类型/约束变化、新的列顺序、
-以及每一列的「数据来源」，确认后才执行。
+入口在表列表页长按，或数据页右上角菜单。执行前会先过一道**变更预览页**：
+列出新增/删除/改名/改类型/约束变化、新的列顺序，以及每一列的「数据来源」，确认后才动手。
 
 | 功能 | 说明 |
 | --- | --- |
@@ -32,49 +31,22 @@ APK：`~/workspace/DBEdit-release.apk`（debug 签名，可直接安装）
 | 加列 | 新列可给默认值；若设 NOT NULL 必须给默认值（否则会拦下并提示） |
 | 删列 | 从表定义中去掉；若该列被索引/触发器引用，会**提前给出明确提示**而不是抛 SQL 错误 |
 | 改列名 | 通过「数据来源」把原列数据搬到新列名下，数据不丢 |
-| 改类型 | 支持任意类型互转。**注意：重建时不做 CAST**，所以把 TEXT 列改成 INTEGER 时，非数字内容会原样保留在 INTEGER 亲和性列里（SQLite 允许），而不是被转成 0 |
+| 改类型 | 支持任意类型互转。**重建时不做 CAST**，所以把 TEXT 列改成 INTEGER 时，非数字内容会原样保留在 INTEGER 亲和性列里（SQLite 允许），而不是被转成 0 |
 | 主键调整 | 支持单列 INTEGER 主键（含 AUTOINCREMENT）与复合主键 |
 | 视图支持 | 视图会被列出，但**只读**（视图没有 rowid，无法按行定位增删改） |
-
-### 改错了怎么办
-
-菜单里的 **「丢弃未保存的改动」** 会从原文件重新导入，完全回到上一次打开时的状态。
-因为改的始终是副本、原文件在你点「保存」前不会被碰，所以只要**没保存**，任何误操作
-（包括搬错列、误删列、改错类型）都能这样救回来。
 
 结构修改采用 SQLite 官方的「重建表」流程：
 `建新表(临时名) → 搬数据(含 rowid) → DROP 旧表 → 临时表改名 → 重建索引/本表触发器 → 恢复 AUTOINCREMENT 计数器 → 恢复外部触发器与视图`
 
+### 改错了怎么办
 
-## 界面与主题
-
-视觉与设计令牌对齐 [AiCode](https://github.com/jieapi/AiCode) 的「默认蓝」主题，
-取值直接来自其 `core/theme/AIEditorTheme.kt` 与 `AppThemePreset.kt`，未自行改色：
-
-| 令牌 | 值 | 用途 |
-| --- | --- | --- |
-| 主色 | `#2563EB` | 按钮、选中态、强调 |
-| 页面底色 | `#F8F8F8` | 页面、顶栏 |
-| 卡片 | `#FFFFFF` | 分组卡片、列表项 |
-| 描边/分隔 | `#E5E5EA`（0.5dp 线） | 卡片内分隔、表格线 |
-| 弱化文字 | `#8E8E93` | 副标题、提示 |
-| 输入框底 | `#F2F2F7` | 搜索/输入胶囊 |
-
-- **扁平顶栏**：页面底色 + 深色文字（不是彩色条）。因此状态栏图标用深色。
-  顶栏右侧统一留 8dp（`EdgeToEdge.TOOLBAR_END_PADDING_DP`），否则 ⋮ 会紧贴屏幕边缘。
-- **分组卡片**：白色圆角 14dp 包住同类操作，卡片内 0.5dp 浅分隔线。
-- **圆角**：卡片 14dp / 按钮 10dp / 输入框 10dp / 标签 8dp。
-- **间距**：4 / 8 / 12 / 16 / 24 / 32 dp。
-- 图标为 Feather 风格线条图标（1.9dp 描边、圆头），取自 AiCode 所用的同一套图标风格。
-- **按钮只有两种底色**，避免主次不分：
-  - 主要操作 —— 主色填充 + 白字（`Widget.DbEdit.Button`）；
-  - 次要操作 —— 白底 + 1dp 描边 + 主色文字（`Widget.DbEdit.Button.Muted`，
-    按下转主色容器色，禁用转弱化灰）。
-  样式名 `Muted` 是历史名，语义现为「描边次按钮」。
+菜单里的 **「丢弃未保存的改动」** 会从原文件重新导入，完全回到上一次打开时的状态。
+因为改的始终是副本、原文件在点「保存」前不会被碰，所以只要**没保存**，任何误操作
+（包括搬错列、误删列、改错类型）都能这样救回来。
 
 ## 数据安全设计
 
-- **不直接改原文件**：先把 `.db` 复制到应用私有目录再打开，原文件在你点「保存」前不会被碰。
+- **不直接改原文件**：先把 `.db` 复制到应用私有目录再打开，原文件在点「保存」前不会被碰。
 - **保存采用「关连接 → 整文件覆盖写 → 重开」**：保证内容完整落盘（避开 WAL 不能简单拼接的问题）。
 - 打开时强制 `journal_mode=DELETE`，避免留下没有配对 `-wal` 的库，其他程序也能正常打开。
 - **结构修改全在事务里**，失败整体回滚，原表和数据完好；执行前自动 `foreign_keys=OFF`、结束后恢复。
@@ -83,7 +55,7 @@ APK：`~/workspace/DBEdit-release.apk`（debug 签名，可直接安装）
 
 ## 技术要点
 
-- Kotlin + 经典 View（非 Compose），`compileSdk 35 / minSdk 26`，APK 约 3.5 MB。
+- Kotlin + 经典 View（非 Compose），`compileSdk 35 / minSdk 26`。
 - 多 Activity 共享一个数据库连接（`DbSession` 单例），避免跨页面传连接对象。
 - 行定位分两类：`INTEGER PRIMARY KEY` / 无主键表用 `rowid`；文本或复合主键用主键列 + `IS ?`（对 NULL 主键安全）。主键列不可修改。
 - 所有 SQL 构造收敛到无 Android 依赖的 `SqlUtil`，因此能在 JVM 上用真实 SQLite 引擎做端到端测试。
@@ -91,11 +63,11 @@ APK：`~/workspace/DBEdit-release.apk`（debug 签名，可直接安装）
 
 ## 构建
 
+需要 JDK 17 与 Android SDK（`compileSdk 35`）。
+
 ```bash
-cd ~/workspace/DBEdit
-export ANDROID_HOME=/opt/android-sdk
-./gradlew assembleRelease        # 产物：app/build/outputs/apk/release/app-release.apk
-./gradlew testDebugUnitTest      # 单元测试
+./gradlew assembleRelease   # 产物：app/build/outputs/apk/release/app-release.apk
+./gradlew testDebugUnitTest # 单元测试
 ```
 
 ## 测试
@@ -112,36 +84,17 @@ export ANDROID_HOME=/opt/android-sdk
 | `LayoutAndInsetsTest` | 15 | **真实加载每个布局/菜单 + 真实 Activity 跑 inset** |
 | `ToolbarAndButtonStyleTest` | 4 | 顶栏右侧留白、按钮描边与禁用态配色 |
 
-后两类用 **Robolectric** 在 JVM 上跑真实 Android 框架，所以「顶栏不被状态栏盖住」
-这类修复是被真实执行并断言的，不只是编译通过。
-
-> 本机是 aarch64、无 KVM，也没有 arm64 版 adb/模拟器（Google 只发 `linux_x64` emulator），
-> 因此无法在真机/模拟器上验证。SQLite 相关的逻辑收敛到纯 JVM 层测；
-> 不碰 SQLite 的 UI 用 Robolectric 测（Robolectric 的 SQLite 原生库仅有 x86_64，故绕开）。
-> **仍未覆盖：文件选择器（SAF）交互、跨 Activity 的完整流程、真实触摸操作**。
-
-## 系统栏适配
-
-Android 15（targetSdk 35）强制 edge-to-edge，窗口会延伸到状态栏与导航栏之下。
-本应用的做法：
-
-- 顶栏颜色延伸到状态栏下方，并把状态栏高度计入 Toolbar 自身的高度/内边距，
-  这样顶栏是一整块颜色、标题垂直居中（而不是在根布局留一条底色不对的空白）。
-- 左右与底部按 inset 留白；底部取「导航栏」与「输入法」的**较大者**（两者会同时上报，相加会多出一块空白）。
-- 只在 API 30+ 启用；更低版本沿用系统默认排布，避免 `setDecorFitsSystemWindows`
-  在 AppCompat 建立 subdecor 之前抢先安装 decor 而报错。
-
-用真实 SQLite 引擎（sqlite-jdbc）逐条执行 `SqlUtil` 构造的 SQL，覆盖：
-标识符转义、`LIKE` 通配符转义（含多列回归）、分页不重叠、`ORDER BY` 稳定性、
+SQL 相关的测试用真实 SQLite 引擎（sqlite-jdbc）逐条执行 `SqlUtil` 构造的语句，
+覆盖标识符与 `LIKE` 通配符转义、分页不重叠、`ORDER BY` 稳定性、
 按 rowid / 文本主键 / 复合主键（含 NULL 主键）定位、更新/插入/删除、`NOT NULL` 约束、
-CSV 转义、保存往返；表结构部分覆盖加列/删列/改名/改类型/复合主键、
+CSV 转义、保存往返；结构修改部分覆盖加列/删列/改名/改类型/复合主键、
 索引与触发器与视图的摘除复原（含链式视图、外部触发器）、外键与级联删除、
-`sqlite_sequence` 保留、rowid 保留、事务回滚，以及列名恰为 SQL 关键字时的误报防护；
-变更预览部分覆盖新增/删除/改名/改类型/约束变化/列顺序/无效数据来源的诊断准确性。
+`sqlite_sequence` 与 rowid 保留、事务回滚。
 
-> 为什么不用模拟器/Robolectric：本环境是 aarch64 容器、无 KVM，且 Robolectric 的原生运行时
-> 只提供 `linux/x86_64`。因此把 SQL 构造收敛到纯逻辑层用同版本 SQLite 验证。
-> **UI 层（Activity / 布局 / 文件选择器 / 结构编辑表单交互）未做自动化测试，建议真机点一遍。**
+布局、菜单、inset 与顶栏样式用 **Robolectric** 在 JVM 上跑真实 Android 框架，
+所以「顶栏不被状态栏盖住」这类修复是被真实执行并断言的，不只是编译通过。
+
+> **未覆盖**：文件选择器（SAF）交互、跨 Activity 的完整流程、真实触摸操作。
 
 ## 已知限制
 
