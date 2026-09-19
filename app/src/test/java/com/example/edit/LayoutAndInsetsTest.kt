@@ -1,4 +1,4 @@
-package com.example.dbeditor
+package com.example.edit
 
 import android.view.View
 import android.view.ViewGroup
@@ -51,7 +51,7 @@ class LayoutAndInsetsTest {
      */
     private fun themedInflater(): android.view.LayoutInflater {
         val base = ApplicationProvider.getApplicationContext<android.content.Context>()
-        val themed = android.view.ContextThemeWrapper(base, R.style.Theme_DbEditor)
+        val themed = android.view.ContextThemeWrapper(base, R.style.Theme_Edit)
         return android.view.LayoutInflater.from(themed)
     }
 
@@ -257,9 +257,9 @@ class LayoutAndInsetsTest {
     // ---------------- 侧边栏（只有一项，且可扩展） ----------------
 
     @Test
-    fun sidebarShowsOnlyDbEditorForNow() {
+    fun sidebarShowsOnlyEditForNow() {
         assertEquals(
-            "当前侧边栏应只有 DB 编辑器一项",
+            "当前侧边栏应只有 Edit一项",
             listOf(AppNav.TOOL_DB_EDITOR),
             AppNav.items.map { it.id }
         )

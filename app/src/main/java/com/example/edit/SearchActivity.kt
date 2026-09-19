@@ -1,4 +1,4 @@
-package com.example.dbeditor
+package com.example.edit
 
 import android.content.Intent
 import android.os.Bundle
@@ -12,8 +12,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.dbeditor.databinding.ActivitySearchBinding
-import com.example.dbeditor.databinding.ItemHitBinding
+import com.example.edit.databinding.ActivitySearchBinding
+import com.example.edit.databinding.ItemHitBinding
 
 /** 全库搜索：在所有表的文本列里找关键字，点结果可跳到对应表 */
 class SearchActivity : BaseActivity() {

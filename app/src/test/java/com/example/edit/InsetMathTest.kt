@@ -1,4 +1,4 @@
-package com.example.dbeditor
+package com.example.edit
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

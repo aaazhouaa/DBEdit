@@ -7,7 +7,7 @@
         android:label="@string/app_name"
         android:largeHeap="true"
         android:supportsRtl="true"
-        android:theme="@style/Theme.DbEditor">
+        android:theme="@style/Theme.Edit">
 
         <activity
             android:name=".MainActivity"

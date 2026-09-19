@@ -7,10 +7,10 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        style="@style/Widget.DbEditor.Toolbar"
+        style="@style/Widget.Edit.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.DbEditor.Toolbar" />
+        android:theme="@style/ThemeOverlay.Edit.Toolbar" />
 
     <!-- 数据库文件信息 -->
     <LinearLayout
@@ -33,7 +33,7 @@
     <!-- 搜索框 -->
     <EditText
         android:id="@+id/etFilter"
-        style="@style/Widget.DbEditor.EditText"
+        style="@style/Widget.Edit.EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -79,7 +79,7 @@
 
         <Button
             android:id="@+id/btnSearchAll"
-            style="@style/Widget.DbEditor.Button.Muted"
+            style="@style/Widget.Edit.Button.Muted"
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_weight="1"
@@ -88,7 +88,7 @@
 
         <Button
             android:id="@+id/btnSql"
-            style="@style/Widget.DbEditor.Button.Muted"
+            style="@style/Widget.Edit.Button.Muted"
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_marginStart="8dp"
@@ -98,7 +98,7 @@
 
         <Button
             android:id="@+id/btnInfo"
-            style="@style/Widget.DbEditor.Button.Muted"
+            style="@style/Widget.Edit.Button.Muted"
             android:layout_width="0dp"
             android:layout_height="44dp"
             android:layout_marginStart="8dp"

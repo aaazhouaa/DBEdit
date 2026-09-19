@@ -1,8 +1,8 @@
-# DB 编辑器（Android）
+# Edit（Android SQLite 编辑器）
 
 一个原生 Android 应用：打开 `.db` 文件即可浏览数据表、搜索记录、直接修改并保存。
 
-APK：`~/workspace/DbEditor-debug.apk`（debug 签名，可直接安装）
+APK：`~/workspace/Edit-debug.apk`（debug 签名，可直接安装）
 
 ## 功能
 
@@ -67,14 +67,14 @@ APK：`~/workspace/DbEditor-debug.apk`（debug 签名，可直接安装）
 - **间距**：4 / 8 / 12 / 16 / 24 / 32 dp。
 - 图标为 Feather 风格线条图标（1.9dp 描边、圆头），取自 AiCode 所用的同一套图标风格。
 - **按钮只有两种底色**，避免主次不分：
-  - 主要操作 —— 主色填充 + 白字（`Widget.DbEditor.Button`）；
-  - 次要操作 —— 白底 + 1dp 描边 + 主色文字（`Widget.DbEditor.Button.Muted`，
+  - 主要操作 —— 主色填充 + 白字（`Widget.Edit.Button`）；
+  - 次要操作 —— 白底 + 1dp 描边 + 主色文字（`Widget.Edit.Button.Muted`，
     按下转主色容器色，禁用转弱化灰）。
   样式名 `Muted` 是历史名，语义现为「描边次按钮」。
 
 ### 侧边导航
 
-左侧抽屉（宽 300dp、页面底色、朝向内容一侧 24dp 圆角），目前**只有「DB 编辑器」一项**。
+左侧抽屉（宽 300dp、页面底色、朝向内容一侧 24dp 圆角），目前**只有「Edit」一项**。
 抽屉顶部只按状态栏高度留白，不写标题或分组小字——只有一项时那是重复信息。
 
 新增工具只需往 `AppNav.items` 追加一个 `NavItem`，侧栏会自动渲染条目、
@@ -107,7 +107,7 @@ val items = listOf(
 ## 构建
 
 ```bash
-cd ~/workspace/DbEditor
+cd ~/workspace/Edit
 export ANDROID_HOME=/opt/android-sdk
 ./gradlew assembleDebug          # 产物：app/build/outputs/apk/debug/app-debug.apk
 ./gradlew testDebugUnitTest      # 单元测试

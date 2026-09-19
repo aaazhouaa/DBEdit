@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.dbeditor"
+    namespace = "com.example.edit"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.dbeditor"
+        applicationId = "com.example.edit"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

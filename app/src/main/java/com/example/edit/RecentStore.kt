@@ -1,4 +1,4 @@
-package com.example.dbeditor
+package com.example.edit
 
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase

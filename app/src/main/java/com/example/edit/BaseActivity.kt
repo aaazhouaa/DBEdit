@@ -1,4 +1,4 @@
-package com.example.dbeditor
+package com.example.edit
 
 import android.app.Activity
 import android.content.Intent

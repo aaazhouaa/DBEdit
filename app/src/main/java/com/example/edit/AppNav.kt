@@ -1,4 +1,4 @@
-package com.example.dbeditor
+package com.example.edit
 
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +23,7 @@ data class NavItem(
 /**
  * 侧边导航栏。
  *
- * 目前只有「DB 编辑器」一项，后续工具在 [items] 里追加即可。
+ * 目前只有「Edit」一项，后续工具在 [items] 里追加即可。
  */
 object AppNav {
 

@@ -5,7 +5,7 @@
   圆角与状态栏留白都放在这一层（而不是 DrawerLayout 的子视图上）：
   DrawerLayout 会给子视图套一层 FrameLayout 并自己消费掉 inset，
   如果把 padding/背景放在子视图，状态栏区域会没有底色、也拿不到 inset。
-  目前只有「DB 编辑器」一项，后续在 navContainer 里追加 @layout/item_nav 即可。
+  目前只有「Edit」一项，后续在 navContainer 里追加 @layout/item_nav 即可。
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/navPanel"
@@ -25,7 +25,7 @@
         android:layout_height="0dp" />
 
     <!-- 顶部只留状态栏留白，不加标题/分组小字：抽屉里只有一个工具，
-         再写「DB 编辑器」「工具」属于重复信息，直接让列表当第一屏内容。 -->
+         再写「Edit」「工具」属于重复信息，直接让列表当第一屏内容。 -->
 
     <!-- 白色圆角卡片包住所有工具项，后续直接在容器内追加条目 -->
     <LinearLayout

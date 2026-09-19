@@ -1,4 +1,4 @@
-package com.example.dbeditor
+package com.example.edit
 
 import android.app.Activity
 import android.content.Intent
@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.example.dbeditor.databinding.ActivityMainBinding
+import com.example.edit.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -83,7 +83,7 @@ class MainActivity : AppCompatActivity() {
         val navContainer = findViewById<LinearLayout>(R.id.navContainer)
         AppNav.render(navContainer, currentTool) { item ->
             if (item.id == currentTool) return@render
-            // 目前只有 DB 编辑器一个工具，切换逻辑先占位，后续在此接入新工具
+            // 目前只有 Edit一个工具，切换逻辑先占位，后续在此接入新工具
             currentTool = item.id
             AppNav.render(navContainer, currentTool) { selected -> onToolSelected(selected) }
             toast(getString(R.string.nav_tool_switched, getString(item.titleRes)))

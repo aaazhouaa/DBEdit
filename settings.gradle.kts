@@ -15,5 +15,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "DbEditor"
+rootProject.name = "Edit"
 include(":app")

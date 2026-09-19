@@ -1,6 +1,6 @@
-package com.example.dbeditor
+package com.example.edit
 
-import com.example.dbeditor.SqlUtil.DdlColumn
+import com.example.edit.SqlUtil.DdlColumn
 
 /**
  * 列编辑表单的纯逻辑：把界面上收集到的原始输入整理成可执行的列定义。

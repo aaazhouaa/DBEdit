@@ -1,4 +1,4 @@
-package com.example.dbeditor
+package com.example.edit
 
 import android.view.View
 import android.view.ViewGroup
@@ -75,7 +75,7 @@ class DrawerShapeTest {
 
     @Test
     fun drawerHasNoTitleOrGroupHeader() {
-        // 抽屉里只有一个工具，再写「DB 编辑器」「工具」是重复信息
+        // 抽屉里只有一个工具，再写「Edit」「工具」是重复信息
         val activity = Robolectric.buildActivity(MainActivity::class.java).setup().get()
         val panel = activity.findViewById<ViewGroup>(R.id.navPanel)
 
@@ -87,11 +87,11 @@ class DrawerShapeTest {
         collect(panel)
 
         // 顶部标题是重复信息，已删除；「工具」分组小字一并去掉。
-        // 注意工具项本身仍叫「DB 编辑器」，它是要保留的菜单文字——所以这里要求
+        // 注意工具项本身仍叫「Edit」，它是要保留的菜单文字——所以这里要求
         // 恰好只剩 1 处，而不是 0 处。
         // 顶部标题的 id 已从布局里删除：这里不能再 findViewById(R.id.tvDrawerTitle)，
         // 否则连编译都过不去——这本身就是「标题已移除」的编译期保证。
-        assertEquals("侧栏里「DB 编辑器」应只作为工具项出现一次", 1, texts.count { it == "DB 编辑器" })
+        assertEquals("侧栏里「Edit」应只作为工具项出现一次", 1, texts.count { it == "Edit" })
         assertTrue("分组小字「工具」应已移除", texts.none { it == "工具" })
         assertTrue("侧栏仍应有工具项文字", texts.any { it.isNotBlank() })
     }
