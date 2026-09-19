@@ -135,9 +135,10 @@ class DrawerShapeTest {
         }
 
         val spacer = activity.findViewById<View>(R.id.navTopSpacer)
+        // 与主页对齐：状态栏(72px) + actionBarSize(112px)
         assertEquals(
-            "侧栏顶部占位应等于状态栏高度，否则标题会被状态栏盖住",
-            72,
+            "侧栏顶部占位应为「状态栏 + 顶栏基础高」，才与主页内容对齐",
+            72 + 112,
             spacer.layoutParams.height
         )
     }

@@ -379,10 +379,51 @@ class LayoutAndInsetsTest {
             isAccessible = true
             invoke(activity)
         }
+        // 侧栏顶部要和主页内容对齐，所以留白是「状态栏 + 顶栏基础高（actionBarSize）」，
+        // 而不是只有状态栏高度——后者会让卡片比主页内容高出整整一个顶栏。
+        val actionBarSize = activity.resources.displayMetrics.let { dm ->
+            val tv = android.util.TypedValue()
+            activity.theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)
+            android.util.TypedValue.complexToDimensionPixelSize(tv.data, dm)
+        }
         assertEquals(
-            "侧栏顶部占位应等于状态栏高度",
-            statusBar,
+            "侧栏顶部占位应等于「状态栏 + 顶栏基础高」，才能和主页内容对齐",
+            statusBar + actionBarSize,
             spacer.layoutParams.height
+        )
+    }
+
+    @Test
+    fun drawerTopGapMatchesHomeContentStart() {
+        // 用真实测量验证「侧栏第一张卡片」与「主页内容区」从同一个 y 开始
+        val activity = Robolectric.buildActivity(MainActivity::class.java).setup().get()
+        val root = activity.findViewById<ViewGroup>(android.R.id.content).getChildAt(0)
+        ViewCompat.dispatchApplyWindowInsets(root, insets(statusBar, navBar))
+        activity.javaClass.getDeclaredMethod("applyDrawerInsets").apply {
+            isAccessible = true; invoke(activity)
+        }
+
+        val dm = activity.resources.displayMetrics
+        root.measure(
+            View.MeasureSpec.makeMeasureSpec(dm.widthPixels, View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(dm.heightPixels, View.MeasureSpec.EXACTLY)
+        )
+        root.layout(0, 0, dm.widthPixels, dm.heightPixels)
+
+        val toolbar = activity.findViewById<View>(R.id.toolbar)
+        val panel = activity.findViewById<View>(R.id.navPanel)
+        panel.visibility = View.VISIBLE
+        panel.measure(
+            View.MeasureSpec.makeMeasureSpec((300 * dm.density).toInt(), View.MeasureSpec.EXACTLY),
+            View.MeasureSpec.makeMeasureSpec(dm.heightPixels, View.MeasureSpec.EXACTLY)
+        )
+        panel.layout(0, 0, (300 * dm.density).toInt(), dm.heightPixels)
+        val container = activity.findViewById<View>(R.id.navContainer)
+
+        assertEquals(
+            "侧栏卡片应与主页内容区从同一高度开始（顶栏底部）",
+            toolbar.bottom,
+            container.top
         )
     }
 

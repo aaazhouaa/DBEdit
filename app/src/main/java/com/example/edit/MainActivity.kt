@@ -95,16 +95,34 @@ class MainActivity : AppCompatActivity() {
         drawer.closeDrawer(GravityCompat.START)
     }
 
-    /** 侧栏顶部按状态栏高度留白，否则标题会被状态栏盖住 */
+    /**
+     * 侧栏顶部留白与主页保持一致。
+     *
+     * 主页的内容从顶栏底部开始，而顶栏是「状态栏 + actionBarSize」两段拼起来的
+     * （见 InsetMath：Toolbar 高度 = 状态栏高度 + actionBarSize）。
+     * 所以侧栏也要留出**整个顶栏**的高度；早先只留状态栏高度，卡片比主页内容
+     * 高出整整一个顶栏（实测 36dp vs 92dp），两块界面看起来对不齐。
+     *
+     * 这里用「缓存的状态栏高度 + 主题里的 actionBarSize」计算，而不是读
+     * toolbar.height：后者要求视图已经完成测量布局，而本方法在 onPostCreate 时被调用，
+     * 那时布局未必发生（读到 0 就会算错并永久写死）。
+     *
+     * 注意：DrawerLayout 会自己消费 inset（根布局的监听返回 CONSUMED），侧栏拿不到 inset，
+     * 所以只能用 EdgeToEdge 缓存下来的值。
+     */
     private fun applyDrawerInsets() {
         if (drawerAppliedInsets || !edgeToEdgeEnabled) return
 
-        // 关键：DrawerLayout 会自己消费掉 inset（根布局的监听返回 CONSUMED），
-        // 子视图收不到，所以改用 EdgeToEdge 缓存下来的系统栏高度。
-        val top = EdgeToEdge.lastSystemBarTop
-        if (top <= 0) return
+        val statusBar = EdgeToEdge.lastSystemBarTop
+        if (statusBar <= 0) return
+
+        val tv = android.util.TypedValue()
+        if (!theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)) return
+        val actionBarSize = android.util.TypedValue
+            .complexToDimensionPixelSize(tv.data, resources.displayMetrics)
+
         val spacer = findViewById<View>(R.id.navTopSpacer) ?: return
-        spacer.layoutParams = spacer.layoutParams.apply { height = top }
+        spacer.layoutParams = spacer.layoutParams.apply { height = statusBar + actionBarSize }
         spacer.requestLayout()
         drawerAppliedInsets = true
     }
