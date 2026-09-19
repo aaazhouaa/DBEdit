@@ -76,8 +76,6 @@ class MainActivity : AppCompatActivity() {
 
     // ---------------- 侧边栏 ----------------
 
-    private var drawerAppliedInsets = false
-
     /** 渲染侧边栏。后续新增工具时，只要往 AppNav.items 里加一项即可 */
     private fun setupNavDrawer() {
         val navContainer = findViewById<LinearLayout>(R.id.navContainer)
@@ -96,35 +94,31 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * 侧栏顶部留白与主页保持一致。
+     * 按系统栏顶部高度设置侧栏留白：状态栏高度 + 顶栏基础高（actionBarSize）。
      *
-     * 主页的内容从顶栏底部开始，而顶栏是「状态栏 + actionBarSize」两段拼起来的
-     * （见 InsetMath：Toolbar 高度 = 状态栏高度 + actionBarSize）。
-     * 所以侧栏也要留出**整个顶栏**的高度；早先只留状态栏高度，卡片比主页内容
-     * 高出整整一个顶栏（实测 36dp vs 92dp），两块界面看起来对不齐。
+     * 为什么要加 actionBarSize：主页内容从顶栏底部开始，而顶栏是「状态栏 +
+     * actionBarSize」两段拼成的（见 InsetMath），所以侧栏也留出整个顶栏高度，
+     * 两侧内容才会从同一 y 开始。只留状态栏高度会让卡片往上顶 56dp。
      *
-     * 这里用「缓存的状态栏高度 + 主题里的 actionBarSize」计算，而不是读
-     * toolbar.height：后者要求视图已经完成测量布局，而本方法在 onPostCreate 时被调用，
-     * 那时布局未必发生（读到 0 就会算错并永久写死）。
+     * 为什么用回调而不是在 onPostCreate 里读一次 [EdgeToEdge.lastSystemBarTop]：
+     * 那个时点 inset 还没分发到（真机上读到 0），侧栏会完全没有留白——
+     * 曾经就是这么写的，真机截图里第一行被状态栏压住。
+     * 回调由 EdgeToEdge 在每次 inset 分发时触发，天然覆盖「迟到」「旋转变化」两种情况。
      *
-     * 注意：DrawerLayout 会自己消费 inset（根布局的监听返回 CONSUMED），侧栏拿不到 inset，
-     * 所以只能用 EdgeToEdge 缓存下来的值。
+     * 读 actionBarSize 而不是 toolbar.height：本方法可能在布局完成前被调用，
+     * 那时 toolbar.height 还是 0。
      */
-    private fun applyDrawerInsets() {
-        if (drawerAppliedInsets || !edgeToEdgeEnabled) return
-
-        val statusBar = EdgeToEdge.lastSystemBarTop
-        if (statusBar <= 0) return
-
+    private fun applyDrawerTopInset(systemBarTop: Int) {
+        val spacer = findViewById<View>(R.id.navTopSpacer) ?: return
         val tv = android.util.TypedValue()
         if (!theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)) return
         val actionBarSize = android.util.TypedValue
             .complexToDimensionPixelSize(tv.data, resources.displayMetrics)
 
-        val spacer = findViewById<View>(R.id.navTopSpacer) ?: return
-        spacer.layoutParams = spacer.layoutParams.apply { height = statusBar + actionBarSize }
+        val target = systemBarTop + actionBarSize
+        if ((spacer.layoutParams?.height ?: -1) == target) return  // 避免无谓重排
+        spacer.layoutParams = spacer.layoutParams.apply { height = target }
         spacer.requestLayout()
-        drawerAppliedInsets = true
     }
 
     // ---------------- 首页操作 ----------------
@@ -238,8 +232,25 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        applyInsetsOnce()
-        applyDrawerInsets()
+        if (edgeToEdgeEnabled) {
+            // 侧栏留白由 inset 回调驱动：DrawerLayout 会消费掉 inset，侧栏自己收不到，
+            // 只能由 EdgeToEdge 转发。用回调才能覆盖「inset 迟到」和「旋转后高度变化」。
+            EdgeToEdge.onSystemBarTopChanged = { top -> applyDrawerTopInset(top) }
+            applyInsetsOnce()
+            // 若 inset 已经先到过（回调在注册前触发），这里补一次当前值
+            if (EdgeToEdge.lastSystemBarTop > 0) applyDrawerTopInset(EdgeToEdge.lastSystemBarTop)
+        } else {
+            // 未启用 edge-to-edge（API < 30）：inset 由系统处理，内容整体已在状态栏下方，
+            // 此时侧栏只需与顶栏对齐（状态栏部分记 0）。不处理的话留白会是 0，
+            // 卡片比顶栏还高，和主页错位。
+            applyDrawerTopInset(0)
+        }
+    }
+
+    override fun onDestroy() {
+        // 回调持有 Activity，不清会在重建/旋转后泄漏并可能更新已销毁的视图
+        if (EdgeToEdge.onSystemBarTopChanged != null) EdgeToEdge.onSystemBarTopChanged = null
+        super.onDestroy()
     }
 
     /** 主内容区按状态栏/导航栏/输入法留白 */

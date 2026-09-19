@@ -22,6 +22,15 @@ object EdgeToEdge {
     var lastSystemBarTop: Int = 0
 
     /**
+     * 系统栏顶部高度变化时的回调。
+     *
+     * 侧栏（DrawerLayout 的子视图）拿不到 inset，所以由这里在每次 inset 分发时转发给它。
+     * 用回调而不是「读一次缓存」：后者要求读取时机恰好晚于第一次 inset 分发，
+     * 而 onPostCreate 里注册监听后立刻读取，值必然还是 0（真机表现就是侧栏顶部不留白）。
+     */
+    var onSystemBarTopChanged: ((Int) -> Unit)? = null
+
+    /**
      * 让窗口进入 edge-to-edge。**必须在 super.onCreate 之前调用**：
      * decor 一旦生成，再改这个开关就不会影响布局了。
      *
@@ -84,6 +93,10 @@ object EdgeToEdge {
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
             lastSystemBarTop = bars.top
+            // 通知侧栏：DrawerLayout 会把 inset 消费掉，侧栏自己收不到，
+            // 只能在这里转发。每到一次 inset 都要回调（旋转、横竖屏切换时值会变），
+            // 不能在侧栏那边用「一次就锁死」的标记。
+            onSystemBarTopChanged?.invoke(bars.top)
             val hasToolbar = toolbar != null && baseToolbarHeight > 0
 
             val plan = InsetMath.plan(bars.top, bars.bottom, ime.bottom, hasToolbar)

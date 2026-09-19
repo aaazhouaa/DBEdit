@@ -374,11 +374,7 @@ class LayoutAndInsetsTest {
         ViewCompat.dispatchApplyWindowInsets(root, insets(statusBar, navBar))
         assertEquals("EdgeToEdge 应记下状态栏高度", statusBar, EdgeToEdge.lastSystemBarTop)
 
-        // 再触发侧栏留白计算
-        activity.javaClass.getDeclaredMethod("applyDrawerInsets").apply {
-            isAccessible = true
-            invoke(activity)
-        }
+        // 派发 inset 即触发侧栏留白（由 EdgeToEdge 回调转发，不手动调内部方法）
         // 侧栏顶部要和主页内容对齐，所以留白是「状态栏 + 顶栏基础高（actionBarSize）」，
         // 而不是只有状态栏高度——后者会让卡片比主页内容高出整整一个顶栏。
         val actionBarSize = activity.resources.displayMetrics.let { dm ->
@@ -399,9 +395,6 @@ class LayoutAndInsetsTest {
         val activity = Robolectric.buildActivity(MainActivity::class.java).setup().get()
         val root = activity.findViewById<ViewGroup>(android.R.id.content).getChildAt(0)
         ViewCompat.dispatchApplyWindowInsets(root, insets(statusBar, navBar))
-        activity.javaClass.getDeclaredMethod("applyDrawerInsets").apply {
-            isAccessible = true; invoke(activity)
-        }
 
         val dm = activity.resources.displayMetrics
         root.measure(

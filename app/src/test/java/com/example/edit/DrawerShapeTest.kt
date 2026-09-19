@@ -129,10 +129,6 @@ class DrawerShapeTest {
                 .setInsets(WindowInsetsCompat.Type.systemBars(), Insets.of(0, 72, 0, 144))
                 .build()
         )
-        activity.javaClass.getDeclaredMethod("applyDrawerInsets").apply {
-            isAccessible = true
-            invoke(activity)
-        }
 
         val spacer = activity.findViewById<View>(R.id.navTopSpacer)
         // 与主页对齐：状态栏(72px) + actionBarSize(112px)
@@ -144,8 +140,9 @@ class DrawerShapeTest {
     }
 
     @Test
-    fun noStatusBarInsetMeansNoSpacer() {
-        // 全屏/无状态栏设备不应白白留一条空白
+    fun noStatusBarStillKeepsToolbarHeightGap() {
+        // 无状态栏（横屏/全屏）时不能留成 0：主页内容此时仍从顶栏底部开始（就是
+        // actionBarSize 那么高），侧栏也得留同样高度才能对齐。
         val activity = Robolectric.buildActivity(MainActivity::class.java).setup().get()
         val root = activity.findViewById<ViewGroup>(android.R.id.content).getChildAt(0)
         EdgeToEdge.lastSystemBarTop = 0
@@ -155,11 +152,19 @@ class DrawerShapeTest {
                 .setInsets(WindowInsetsCompat.Type.systemBars(), Insets.of(0, 0, 0, 0))
                 .build()
         )
-        activity.javaClass.getDeclaredMethod("applyDrawerInsets").apply {
-            isAccessible = true
-            invoke(activity)
-        }
         val spacer = activity.findViewById<View>(R.id.navTopSpacer)
-        assertEquals(0, spacer.layoutParams.height)
+        assertEquals(
+            "无状态栏时留白应等于顶栏基础高，而不是 0",
+            actionBarSizePx(activity),
+            spacer.layoutParams.height
+        )
+    }
+
+    /** 主题里的 actionBarSize（px） */
+    private fun actionBarSizePx(activity: MainActivity): Int {
+        val tv = android.util.TypedValue()
+        activity.theme.resolveAttribute(android.R.attr.actionBarSize, tv, true)
+        return android.util.TypedValue
+            .complexToDimensionPixelSize(tv.data, activity.resources.displayMetrics)
     }
 }
