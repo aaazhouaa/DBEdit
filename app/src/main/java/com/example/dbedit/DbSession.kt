@@ -29,10 +29,7 @@ object DbSession {
     fun openLocalFile(context: Context, src: File, displayName: String): DbManager {
         val m = get(context)
         m.close()
-        val dir = File(context.filesDir, "dbs").apply { mkdirs() }
-        val dest = File(dir, displayName)
-        src.inputStream().use { input -> dest.outputStream().use { input.copyTo(it) } }
-        m.openFromPath(dest, null, displayName)
+        m.openFromLocalFile(src, displayName)
         return m
     }
 

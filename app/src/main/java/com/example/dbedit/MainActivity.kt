@@ -112,6 +112,9 @@ class MainActivity : AppCompatActivity() {
             RecentStore.add(this, uri, DbSession.get(this).sourceName)
             startActivity(Intent(this, TableListActivity::class.java))
             renderRecent()
+            if (DbSession.get(this).walSidecarWarning) {
+                toast("该库是 WAL 格式，但系统只授权了主文件，未 checkpoint 的修改可能缺失")
+            }
         } catch (e: Exception) {
             AlertDialog.Builder(this)
                 .setTitle("打开失败")

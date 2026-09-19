@@ -83,6 +83,24 @@ class DbManager(private val context: Context) {
         private val SQLITE_MAGIC = "SQLite format 3\u0000".toByteArray(Charsets.US_ASCII)
         const val PAGE_SIZE = 200
         private const val KEY_ALIAS = "__dbedit_key__"
+
+        /**
+         * 复制 SQLite 文件组：主文件 + 同目录的 -wal / -shm（存在才复制）。
+         * 只复制主文件会丢掉 WAL 里尚未 checkpoint 的提交，甚至导致库不完整。
+         */
+        fun copySqliteGroup(src: File, dest: File) {
+            copyFile(src, dest)
+            val dir = src.absoluteFile.parentFile ?: File(".")
+            for (suffix in arrayOf("-wal", "-shm")) {
+                val side = File(dir, src.name + suffix)
+                if (side.exists()) copyFile(side, File(dest.parentFile, dest.name + suffix))
+            }
+        }
+
+        private fun copyFile(src: File, dest: File) {
+            dest.parentFile?.mkdirs()
+            src.inputStream().use { input -> dest.outputStream().use { input.copyTo(it) } }
+        }
     }
 
     var db: SQLiteDatabase? = null
@@ -98,6 +116,13 @@ class DbManager(private val context: Context) {
         private set
 
     var dirty: Boolean = false
+        private set
+
+    /**
+     * 当通过 content:// 打开、且源库是 WAL 格式时置为 true：
+     * 文件选择器只授权单个主文档，拿不到同目录 -wal/-shm，未 checkpoint 的提交会缺失。
+     */
+    var walSidecarWarning: Boolean = false
         private set
 
     val isOpen: Boolean get() = db?.isOpen == true
@@ -167,17 +192,50 @@ class DbManager(private val context: Context) {
         return name
     }
 
-    /** 从 SAF Uri 打开数据库（先复制到私有目录）。 */
+    /** 从 Uri 打开数据库（先复制到私有目录）。file:// 会把 -wal/-shm 一起复制。 */
     fun openFromUri(uri: Uri) {
         val name = queryDisplayName(uri)
         val dir = File(context.filesDir, "dbs").apply { mkdirs() }
         val dest = File(dir, sanitizeFileName(name))
 
-        context.contentResolver.openInputStream(uri)?.use { input ->
-            FileOutputStream(dest).use { output -> input.copyTo(output) }
-        } ?: throw IllegalArgumentException("无法读取所选文件")
+        val src = uri.filePath()
+        if (src != null) {
+            if (!src.exists()) throw IllegalArgumentException("无法读取所选文件")
+            copySqliteGroup(src, dest)
+        } else {
+            // content:// 只授权单个文档，拿不到同目录的 -wal/-shm，只能复制主文件。
+            // 这是 SAF 单文档授权的能力边界；若源库是 WAL 且 -wal 未合并，会提示无法完整导入。
+            context.contentResolver.openInputStream(uri)?.use { input ->
+                FileOutputStream(dest).use { output -> input.copyTo(output) }
+            } ?: throw IllegalArgumentException("无法读取所选文件")
+        }
 
         openFromPath(dest, uri, name)
+        if (src == null && isWalFormat(dest)) walSidecarWarning = true
+    }
+
+    /** 打开本地文件（演示库 / 新建库用，没有 SAF Uri）。 */
+    fun openFromLocalFile(src: File, name: String) {
+        val dir = File(context.filesDir, "dbs").apply { mkdirs() }
+        val dest = File(dir, sanitizeFileName(name))
+        copySqliteGroup(src, dest)
+        openFromPath(dest, null, name)
+    }
+
+    /** Uri 是 file:// 时转成 File，否则返回 null。 */
+    private fun Uri.filePath(): File? =
+        if (scheme.equals("file", ignoreCase = true)) path?.let { File(it) } else null
+
+    /** 判断 SQLite 主文件头是否为 WAL 格式（文件头 write version == 2）。 */
+    private fun isWalFormat(file: File): Boolean {
+        if (file.length() < 20) return false
+        return try {
+            val head = ByteArray(20)
+            file.inputStream().use { it.read(head) }
+            head[19].toInt() == 2
+        } catch (_: Exception) {
+            false
+        }
     }
 
     /** 打开本地路径的库（演示库 / 新建库用）。 */
@@ -199,6 +257,7 @@ class DbManager(private val context: Context) {
         sourceUri = uri
         sourceName = name
         dirty = false
+        walSidecarWarning = false
         keyCache.clear()
         viewCache.clear()
     }
@@ -213,6 +272,9 @@ class DbManager(private val context: Context) {
         context.contentResolver.openOutputStream(uri, "wt")?.use { out ->
             file.inputStream().use { input -> input.copyTo(out) }
         } ?: throw IllegalStateException("无法写入目标文件")
+        // 写入的是已 checkpoint、journal_mode=DELETE 的自包含主文件；
+        // 若目标旁还残留旧 -wal/-shm，其他程序可能读到不匹配的旧 WAL，一并清掉。
+        clearSidecars(uri.filePath())
         try {
             context.contentResolver.takePersistableUriPermission(
                 uri,
@@ -220,6 +282,14 @@ class DbManager(private val context: Context) {
                         android.content.Intent.FLAG_GRANT_WRITE_URI_PERMISSION
             )
         } catch (_: Exception) {
+        }
+    }
+
+    private fun clearSidecars(dest: File?) {
+        if (dest == null) return
+        val dir = dest.parentFile ?: return
+        for (suffix in arrayOf("-wal", "-shm")) {
+            runCatching { File(dir, dest.name + suffix).delete() }
         }
     }
 
